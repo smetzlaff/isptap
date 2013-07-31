@@ -1,0 +1,36 @@
+#################
+
+# log config:
+
+# Set root logger level to TRACE and its only appender to A1.
+log4j.rootLogger=TRACE, A1
+
+# A1 is set to be a ConsoleAppender.
+#log4j.appender.A1=org.apache.log4j.ConsoleAppender
+log4j.appender.A1=org.apache.log4j.RollingFileAppender
+#log4j.appender.A1.File=isptap_compress_cache_320.log
+log4j.appender.A1.Append=false
+
+# max size
+log4j.appender.A1.MaxFileSize=10GB
+# Keep one backup file
+#log4j.appender.A1.MaxBackupIndex=5
+
+# A1 uses PatternLayout.
+log4j.appender.A1.layout=org.apache.log4j.PatternLayout
+
+log4j.appender.A1.layout.ConversionPattern=%5p %25c:	%m%n
+#log4j.appender.A1.layout.ConversionPattern=%5p %c (%F:%L) - %m%n
+#log4j.appender.A1.layout.ConversionPattern=%5p [%t] %c (%F:%L) - %m%n
+
+
+# Log levels
+
+# set to WARN
+#log4j.logger.CarCoreDumpParser=WARN, A1;
+#log4j.logger.ControlFlowGraphObject=WARN, A1;
+#log4j.logger.FunctionCallGraphObject=WARN, A1;
+#log4j.logger.TricoreISA=WARN, A1;
+
+
+

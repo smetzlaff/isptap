@@ -1,0 +1,74 @@
+# CarCore Architecture Configuration File
+# taking the interferences from data & instruction memory accesses into account.
+# since there is an LMS the interference should be 6 cycles instead of 3 (but for simplicity the lms interference is ignored)
+# currently there is no difference between on/off chip for data memory accesses
+
+
+carcore.load_latency_onchip = 7	 # 4 + 3 cycles for interference
+carcore.load_latency_offchip = 7 # 4 + 3 cycles for interference
+
+carcore.store_latency_onchip = 6 # same as load but without the insert load instr
+carcore.store_latency_offchip = 6 # same as load but without the insert load instr
+
+carcore.branch_latency = 2 # should be 2, because 3 cycles after a branch (which is not taken) the next instr can be executed
+
+carcore.call_latency = 57 # + 1 cycle = cycle cost of call 
+
+carcore.return_latency = 50 # + 1 cycle = cycle cost of return
+
+# NOTICE: it is assumed that a replaced jump has the same capabilities of checking a condition as the original one! (which is not necessarily true)
+# Jump penalties for basic block assignment in static scratchpad optimization
+carcore.jump_penalty_for_continuous_addressing = 26 # cycles penalty for adding a jump to connect a moved block (resp. to return from a moved block)
+carcore.jump_penalty_for_jump_disp4 = 7 # cycles penalty for replacing a jump (with 4 bit displacement)  by a jump that allows to bridge the address space between the scratchpad and main memory
+carcore.jump_penalty_for_jump_disp8 = 7 # cycles penalty for replacing a jump (with 8 bit displacement)  by a jump that allows to bridge the address space between the scratchpad and main memory
+carcore.jump_penalty_for_jump_disp15 = 0 # cycles penalty for replacing a jump (with 15 bit displacement) by a jump that allows to bridge the address space between the scratchpad and main memory
+carcore.jump_penalty_for_jump_disp24 = 0 # cycles penalty for replacing a jump (with 24 bit displacement) by a jump that allows to bridge the address space between the scratchpad and main memory
+carcore.jump_penalty_for_jump_ind = 0 # cycles penalty for an indirect jump (full 32 bit are used for target address). The penalty has to be 0 since every address in the processors address space is reachable.
+carcore.jump_penalty_for_call_disp8 = 7 # cycles penalty for replacing a call (with 8 bit displacement) by a call that allows to bridge the address space between the scratchpad and main memory
+carcore.jump_penalty_for_call_disp24 = 0 # cycles penalty for replacing a call (with 24 bit displacement) by a call that allows to bridge the address space between the scratchpad and main memory
+carcore.jump_penalty_for_call_ind = 0 # cycles penalty for an indirect call (full 32 bit are used for target address). The penalty has to be 0 since every address in the processors address space is reachable.
+
+# NOTICE: it is assumed that a replaced jump has the same capabilities of checking a condition as the original one! (which is not necessarily true)
+# ALSO NOTICE: If the size of a basic block is increased, it will be always increased by a multiple of the fetch block size, to not affect the alignment of the successor blocks.
+# Size penalties for basic block assignment in static scratchpad optimization
+carcore.size_penalty_for_continuous_addressing = 4 # bytes penalty for adding a jump to connect a moved block (resp. to return from a moved block)
+carcore.size_penalty_for_jump_disp4 = 2 # bytes penalty for replacing a jump (with 4 bit displacement)  by a jump that allows to bridge the address space between the scratchpad and main memory
+carcore.size_penalty_for_jump_disp8 = 2 # bytes penalty for replacing a jump (with 8 bit displacement)  by a jump that allows to bridge the address space between the scratchpad and main memory
+carcore.size_penalty_for_jump_disp15 = 0 # bytes penalty for replacing a jump (with 15 bit displacement) by a jump that allows to bridge the address space between the scratchpad and main memory
+carcore.size_penalty_for_jump_disp24 = 0 # bytes penalty for replacing a jump (with 24 bit displacement) by a jump that allows to bridge the address space between the scratchpad and main memory
+carcore.size_penalty_for_jump_ind = 0 # bytes penalty for an indirect jump (full 32 bit are used for target address). The penalty has to be 0 since every address in the processors address space is reachable.
+carcore.size_penalty_for_call_disp8 = 2 # bytes penalty for replacing a call (with 8 bit displacement) by a call that allows to bridge the address space between the scratchpad and main memory
+carcore.size_penalty_for_call_disp24 = 0 # bytes penalty for replacing a call (with 24 bit displacement) by a call that allows to bridge the address space between the scratchpad and main memory
+carcore.size_penalty_for_call_ind = 0 # bytes penalty for an indirect call (full 32 bit are used for target address). The penalty has to be 0 since every address in the processors address space is reachable.
+
+
+# not yet implemented
+carcore.fetch_independent_imem = 1
+carcore.fetch_bandwidth = 64 # bit
+carcore.fetch_latency_onchip = 0
+carcore.fetch_latency_offchip = 7 # 3 + 4 cycles for interference
+carcore.use_fetch_optimization_branch_ahead = 0
+carcore.use_fetch_optimization_enough_instrs = 0
+# configuration for instruction memories
+carcore.disp_mapping_table_size = 256 # in number of functions (notice: for different values of mapping table size and lookup width the disp hit and miss times need to be adjusted [see multi-cycle lookup])
+carcore.disp_lookup_width = 256 # in number of functions (notice: for different values of mapping table size and lookup width the disp hit and miss times need to be adjusted [see multi-cycle lookup]) 
+carcore.disp_context_stack_depth = 16 # in number of functions
+carcore.disp_block_size = 8 # bytes
+### The block_load_latency is 8, it should be 7, but there is an additional cycle charged for load dispatch. This favours the cache.
+carcore.disp_block_load_latency = 8 # 4 cycles is latency of block load + 3 cycles for interference. Adding one cycle is the cost of a disp load cost.
+carcore.disp_controller_hit_cycles = 4 # cycles for table lookup and context register write (including on wait cycle to reallow fetches)
+carcore.disp_controller_miss_cycles = 5 # cycles for internal processing, like table lookup, context register write and write latencies (including on wait cycle to reallow fetches)
+# NOTICE: if the cache is enabled the worst case memory access time load or store (to shared off-chip mem (not DSP)) can be interrupted by a cache miss
+carcore.icache_line_size = 32 # byte
+carcore.icache_miss_latency = 32 # 4 * 4 cycles + 4*4 cycles for interference + 1 cycle miss handling (-1 since the latency is used here)
+
+
+# floating point instruction latencies
+carcore.fp_latency_arithmetic = 1
+carcore.fp_latency_divide = 5
+carcore.fp_latency_conversion = 1
+carcore.fp_latency_multiplyaccumulate = 4
+carcore.fp_latency_multiply = 3
+carcore.fp_latency_sqrtseed = 10
+carcore.fp_latency_updateflags = 0
+

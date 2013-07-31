@@ -1,0 +1,53 @@
+SRC_DIR=src
+PREFIX_DIR=@prefix@
+BIN_DIR=bin
+
+# instruction scratchpad timing analyzer
+TARGET=$(BIN_DIR)/isptap
+
+
+CPP_INCLUDE=-I. -I$(SRC_DIR) -I$(SRC_DIR)/analysis -I$(SRC_DIR)/parser -I$(SRC_DIR)/arch -I$(SRC_DIR)/graph -I$(SRC_DIR)/memory -I$(SRC_DIR)/util -I$(SRC_DIR)/instr
+CPP_DEFINE=-O2 -Wall -Wextra -Wno-deprecated 
+CPP_DEBUG_FLAGS=-g
+
+BOOST_LIBS=-lboost_graph-mt
+REGEX_LIBS=-lboost_regex-mt
+PROGRAMOPTIONS_LIBS=-lboost_program_options
+LOG4CXX=-llog4cxx
+
+CPPFLAGS=$(CPP_INCLUDE) $(CPP_DEFINE) $(CPP_DEBUG_FLAGS)
+
+LDFLAGS=
+LDLIBS=$(BOOST_LIBS) $(REGEX_LIBS) $(PROGRAMOPTIONS_LIBS) $(LOG4CXX)
+
+SRC=$(wildcard $(SRC_DIR)/*.cpp) $(wildcard $(SRC_DIR)/analysis/*.cpp) $(wildcard $(SRC_DIR)/parser/*.cpp) $(wildcard $(SRC_DIR)/arch/*.cpp) $(wildcard $(SRC_DIR)/graph/*.cpp) $(wildcard $(SRC_DIR)/util/*.cpp) $(wildcard $(SRC_DIR)/memory/*.cpp) $(wildcard $(SRC_DIR)/instr/*.cpp)
+HEADER_DIR=src
+HEADERS= config.h $(wildcard $(SRC_DIR)/*.h*) $(wildcard $(SRC_DIR)/parser/*.h*) $(wildcard $(SRC_DIR)/parser/*.h*) $(wildcard $(SRC_DIR)/arch/*.h*) $(wildcard $(SRC_DIR)/graph/*.h*) $(wildcard $(SRC_DIR)/util/*.h*) $(wildcard $(SRC_DIR)/memory/*.h*) $(wildcard $(SRC_DIR)/instr/*.h*)
+
+
+$(TARGET): $(SRC:.cpp=.o)
+	if [ -d $(BIN_DIR) ]; then echo "Directory $(BIN_DIR) already created"; else  echo "Creating $(BIN_DIR)"; mkdir $(BIN_DIR); fi
+	$(CXX) $(C_FLAGS) $(LDFLAGS) -o $(TARGET) $(SRC:.cpp=.o) $(LDLIBS)
+
+depend:
+	makedepend -Y. -- $(CPPFLAGS) --  $(SRC)
+
+.PHONY: doc
+doc:
+	doxygen isptap.doxyfile
+
+doc_clean:
+	rm -rf doc/*
+
+clean:
+	rm -rf $(TARGET)
+	rm -rf $(SRC:.cpp=.o)
+
+install: $(TARGET)
+	if [ -d $(PREFIX_DIR) ]; then echo "Directory $(PREFIX_DIR) already created"; else  echo "Creating $(PREFIX_DIR)"; mkdir $(PREFIX_DIR); fi
+	cp $(BIN_DIR)/* $(PREFIX_DIR)/
+	if [ -d $(PREFIX_DIR)/configs ]; then echo "Directory $(PREFIX_DIR)/configs already created"; else echo "Creating $(PREFIX_DIR)/configs"; mkdir $(PREFIX_DIR)/configs; fi
+	cp configs/*.prop $(PREFIX_DIR)/configs
+
+uninstall:
+	rm -rfI $(PREFIX_DIR)

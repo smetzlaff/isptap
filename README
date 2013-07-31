@@ -1,0 +1,93 @@
+============
+ISPAP Readme
+============
+
+Installation
+============
+
+Dependencies:
+-------------
+
+- build-essential (for make, g++, ...)
+- libboost-graph-dev
+- libboost-regex-dev
+- libboost-program-options-dev
+- liblog4cxx10-dev
+- liblpsolve55-dev
+- lp-solve
+- xutils-dev (for makedepend used to generate dependencies)
+- doxygen (for code documentation)
+
+Build & install:
+----------------
+
+1. Configuration:
+
+	./configure --prefix=/some/dir/
+
+2. Dependency generation (optional):
+
+	make depend
+
+3. Building:
+
+	make
+
+4. Installation:
+
+	make install
+
+
+Usage:
+======
+
+isptap configs/config_file.cfg
+
+Parameters:
+
+  -h [ --help ]         This help message
+  --help-config         Help message for the format of the configuration files.
+  --help-architecture   Help message for the format of the architecture files.
+  --help-carcore        Help message for the format of the CarCore config 
+                        files.
+  --help-armv6m         Help message for the format of the ARMv6M config files.
+  --help-flow-facts     Help message for the format of the flow-fact files.
+  -v [ --version ]      version
+
+Additional parameters to overwrite/set specific config file settings:
+  -a [ --set-arch-file ] arg set architectural configuration file
+  -l [ --set-log-file ] arg  set log output file
+  -r [ --set-rpt-file ] arg  set report file
+  -L [ --set-log-dir ] arg   set log output dir (parameter is added as prefix)
+  -R [ --set-rpt-dir ] arg   set report dir (parameter is added as prefix)
+  -D [ --set-out-dir ] arg   set log and report dir (parameter is added as 
+                             prefix, do not use with -L or -R)
+
+
+Documentation:
+==============
+See Technical Report "ISPTAP -- Instruction Scratchpad Timing Analysis Program: Features and Usage" 
+2013-09 from University of Augsburg. Also use the "make doc" for code documentation.
+
+
+License:
+========
+
+For license see LICENCE file.
+
+
+==============================================
+----------------------------------------------
+Please cite the tool when using it as follows:
+
+@TECHREPORT{isptap_tr2013,
+  author = {Stefan Metzlaff},
+  title = {ISPTAP -- Instruction Scratchpad Timing Analysis Program: Features and Usage},
+  institution = {University of Augsburg},
+  year = {2013},
+  number = {2013-09}
+}
+
+----------------------------------------------
+==============================================
+
